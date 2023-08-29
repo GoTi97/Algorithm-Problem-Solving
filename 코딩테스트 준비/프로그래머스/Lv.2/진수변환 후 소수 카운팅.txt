@@ -1,0 +1,58 @@
+1. 주어진 숫자 진수변환
+2. 0 을 기준으로 split 하여 숫자 리스트 생성
+3. 각 인덱스의 숫자들을 탐색.
+만약 해당 수가 소수이면, count++
+
+---------------------------------------코드
+
+import string
+import math
+
+tmp = string.digits+string.ascii_lowercase
+def convert(num, base) :
+    q, r = divmod(num, base)
+    if q == 0 :
+        return tmp[r] 
+    else :
+        return convert(q, base) + tmp[r]
+    
+def is_prime(num):
+    if num == 0:
+        return False
+    elif num == 1:
+        return False
+    else:
+        for i in range (2, int(math.sqrt(num) + 1)):
+            if num % i == 0:		
+                return False
+        return True
+
+def solution(n, k):
+    answer = 0
+
+    trans_n = convert(n,k)
+
+    possible_element = trans_n.split('0')
+
+    prime_check_num = 0
+    
+    for i in range(len(possible_element)):
+        try:
+            prime_check_num = int(possible_element[i])
+        except ValueError as e:
+            prime_check_num = 0
+        print(is_prime(prime_check_num))    
+        if is_prime(prime_check_num):
+
+            answer += 1
+
+    return answer
+
+
+
+----------------------------------피드백
+
+소수를 찾는 과정에서
+2~n-1 번째까지 나누는것이 아니라,
+약수의 특징을 활용해서 n의 제곱근까지만
+나누어서 확인해보면 된다.
