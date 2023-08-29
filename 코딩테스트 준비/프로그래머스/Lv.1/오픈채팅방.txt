@@ -1,0 +1,65 @@
+1. 각 원소를 순회
+2. 각 원소를 split 을 통해 3개 또는 2개의 문자열리스트로 나눔
+3. 첫 번째 원소 구분
+switch
+Enter 일 경우 아이디와 닉네임 맵핑 후 등록
+큐에 ID 와 Enter 튜플로 쌓아놓기
+
+Leave 일 경우 큐에 ID 와 Leave 튜플로 쌓아놓기 
+
+Change 일 경우 해당 아이디의 닉네임 맵핑 값을 변경
+만약, key 값이 없을 경우 
+error Throw
+
+4. 모든 원소 순회 끝나면
+큐에서 다시 하나씩 꺼냄
+
+Enter 일 경우 해당 key 값에 맞는 닉네임과 들어왔습니다 문자열을 원소로 추가
+
+Leave 일 경우 해당 key 값에 맞는 닉네임과 나갔습니다 문자열을 원소로 추가
+
+5. 최종 문자열 리스트 리턴
+
+Enter uid1234 Muzi
+
+Leave uid1234
+
+Change uid1234 Muzi
+
+
+--------------------------------코드
+
+from queue import Queue
+
+def solution(record):
+    answer = []
+    db = dict()
+    que = Queue()
+    
+    for i in range(len(record)):
+        log = record[i].split()
+        if log[0] == "Enter":
+            db["%s"%log[1]] = "%s"%log[2]
+            que.put(("Enter",log[1]))
+        elif log[0] == "Leave":
+            que.put(("Leave",log[1]))
+        elif log[0] == "Change":
+            try:
+                db["%s"%log[1]] = "%s"%log[2]
+            except KeyError:
+                print("DB 에 키값이 없습니다.")
+        else:
+            raise Exception("있을 수 없는 경우.")
+        
+    for j in range(que.qsize()):
+        element = que.get() 
+        if element[0] == "Enter":
+            answer.append("%s님이 들어왔습니다."%db[element[1]])
+        elif element[0] == "Leave":
+            answer.append("%s님이 나갔습니다."%db[element[1]])
+
+    return answer
+
+--------------------------------AI 피드백
+모든 영역에서 평균 수준의 문제 해결력을 갖추고 있습니다.
+문제 해결력을 더 높이고 싶다면 사고력, 그래프, DFS 카테고리를 학습해보는 것을 권장합니다.
