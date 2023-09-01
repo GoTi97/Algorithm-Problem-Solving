@@ -1,0 +1,48 @@
+from array import array
+
+def find_palin(s):
+    
+    answer = 0
+    
+    first = ""
+    second = ""
+    
+    for i in range((len(s)//2)-1): #n이 짝수일때
+        
+        first = s[0:i+1]
+        second = s[i+1:2*i+2]
+        re_second = second[::-1]
+        if first == re_second:
+            if answer < 2*(i+1):
+                answer = 2*(i+1)
+                
+    for i in range((len(s)//2)): #n이 홀수일때
+        
+        first = s[0:i+1]
+        second = s[i+2:2*i+3]
+        re_second = second[::-1]
+        if first == re_second:
+            if answer < 2*(i+1)+1:
+                answer = 2*(i+1)+1
+                
+    return answer
+
+def solution(s):
+    
+    answer = find_palin(s)
+    
+    re_s = s[::-1]
+    
+    re_answer = find_palin(re_s)
+    
+    if re_answer > answer:
+        answer = re_answer    
+
+    
+    return answer
+
+
+
+------------------------피드백
+
+[::-1]

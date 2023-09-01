@@ -1,0 +1,31 @@
+import math
+
+def is_sosu(num):
+    ans = True 
+    num_sqrt = round(math.sqrt(num))+1
+    for i in range(2,num_sqrt):
+        if num_sqrt % i == 0:
+            ans = False
+    return ans
+
+def solution(nums):
+    
+    answer = 0
+    a = 0
+    b = 0
+    c = 0
+    num = 0
+
+    for i in range(len(nums)):
+        a = nums[i]
+        for j in range(i+1,len(nums)):
+            b = nums[j]
+            for k in range(j+1,len(nums)):
+                c = nums[k]
+                num = a + b + c
+                if is_sosu(num):
+                    answer += 1
+                    
+    #시간초과 고려 필요
+
+    return answer
