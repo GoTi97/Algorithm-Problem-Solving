@@ -1,10 +1,30 @@
+1번 3개뽑아서 소수인지 확인
+
+최대 50개
+
+50*49*48/6 = 19600
+
+50C3
+
+1. 3중포문으로 3개 숫자 뽑기
+
+2. 해당 숫자 더해서 소수인지 확인
+
+3. 소수면 count ++
+
+
+------------------------- 코드 구현
+
 import math
+import sys
+
+input = sys.stdin.readline
 
 def is_sosu(num):
     ans = True 
     num_sqrt = round(math.sqrt(num))+1
     for i in range(2,num_sqrt):
-        if num_sqrt % i == 0:
+        if num % i == 0:
             ans = False
     return ans
 
@@ -16,16 +36,18 @@ def solution(nums):
     c = 0
     num = 0
 
-    for i in range(len(nums)):
+    for i in range(len(nums)-2):
         a = nums[i]
-        for j in range(i+1,len(nums)):
+        for j in range(i+1,len(nums)-1):
             b = nums[j]
             for k in range(j+1,len(nums)):
                 c = nums[k]
                 num = a + b + c
                 if is_sosu(num):
                     answer += 1
-                    
-    #시간초과 고려 필요
 
     return answer
+------------------------------------------
+
+num 에서 0~num_sqrt 를 나누어서 소수 판별을 했어야했는데
+num_sqrt 에서 0~num_sqrt 를 나눴음
