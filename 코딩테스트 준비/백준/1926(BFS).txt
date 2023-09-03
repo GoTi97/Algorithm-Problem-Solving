@@ -1,0 +1,72 @@
+# n 에 대한 for 문
+# m 에 대한 for 문
+# 만약 1 이 나오면 BFS 탐색
+# BFS 끝나면 그림 갯수 +1 그리고 해당 그림 넓이 출력
+# 최종 그림 갯수와 최대 그림 넓이 출력
+
+---------------피드백
+
+list[x,y] 가 아니고 list[x][y] 식으로 입력해야함
+
+2차원 배열 크기 알고 싶을땐, size() 가 아니라
+len 써야됨
+
+큐 활용안하고 재귀 함수 쓰면, 런타임 에러 날 수 있음. 이미 연산했던거 다시 한번더 탐색해야해서. 
+
+
+------------------------구현
+
+
+from collections import deque
+
+import sys
+input = sys.stdin.readline
+
+# n 에 대한 for 문
+# m 에 대한 for 문
+# 만약 1 이 나오면 BFS 탐색
+# BFS 끝나면 그림 갯수 +1 그리고 해당 그림 넓이 출력
+# 최종 그림 갯수와 최대 그림 넓이 출력
+
+dx = [1,0,-1,0]
+dy = [0,-1,0,1]
+
+def bfs(y,x):
+    area = 1
+    q = deque()
+    q.append((y,x))
+    while q:
+        ey, ex = q.popleft()
+        for i in range(4):
+            ny = dy[i] + ey
+            nx = dx[i] + ex
+            if 0 <= nx < m and 0 <= ny < n:
+                if chk_visit[ny][nx] == False and matrix[ny][nx] == 1:
+                    chk_visit[ny][nx] = True
+                    area += 1
+                    q.append((ny,nx))
+    return area
+
+n, m = map(int, input().split())
+matrix = []
+chk_visit = []
+
+#매트릭스 생성
+for _ in range(n):
+    matrix.append(list(map(int,input().split())))
+    chk_visit.append([False]*m)
+
+#매트릭스 탐색
+cnt = 0
+maxv = 0
+
+for j in range(n):
+    for i in range(m):
+        if matrix[j][i] == 1 and chk_visit[j][i] == False:
+            chk_visit[j][i] = True
+            cnt += 1
+            area = bfs(j,i)
+            maxv = max(area,maxv)
+
+print(cnt)
+print(maxv)
