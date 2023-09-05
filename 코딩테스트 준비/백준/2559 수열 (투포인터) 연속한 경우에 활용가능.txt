@@ -1,0 +1,43 @@
+'''
+
+아이디어
+투포인터 활용
+배열 첫번째부터 k번째까지 더한값을 tmp 에 저장
+tmp 에서 마지막 다음 원소 더해주고 첫번째 원소 빼주고
+변경된 tmp 를 maxv 에 업데이트
+
+
+시간복잡도
+O(N)
+
+자료구조
+N,K : int
+list : int[]
+tmp : int
+maxv : int
+
+'''
+
+import sys
+input = sys.stdin.readline
+
+N,K = map(int,input().split())
+temp_list = list(map(int,input().split()))
+maxv = 0
+tmp = 0
+
+for i in range(K):
+    tmp += temp_list[i]
+
+maxv = tmp
+
+for i in range(K,N):
+    tmp -= temp_list[i-K]
+    tmp += temp_list[i]
+    maxv = max(tmp,maxv)
+
+print(maxv)
+
+
+
+
