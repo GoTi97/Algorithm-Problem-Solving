@@ -15,3 +15,5 @@ input = sys.stdin.readline
 
 [assert 활용]
 assert age >= 0, '나이가 마이너스인게 가능한가 휴먼?'
+
+코테 보기전에 피드백 한번 쫙 훑기
