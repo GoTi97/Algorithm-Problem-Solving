@@ -1,0 +1,53 @@
+# -*- coding: euc-kr -*-
+# -*- coding: cp949 -*-
+
+'''
+아이디어
+플로이드 와샬
+j->i 가는 매트릭스 형성
+2중 포문으로 INF 값으로 초기화
+제자리의 경우 0 으로 업데이트
+3중포문 돌면서 j->k->i 한번에 갈때보다 거쳐갈때 더 싸면 업데이트
+
+시간복잡도
+
+플로이드 와샬 O(V^3) = 100^3 = 1,000,000 << 2억
+
+자료구조
+
+n : int (최대100)
+m : int (최대 100,000)
+
+비용리스트 : int[][]
+
+'''
+
+import sys
+input = sys.stdin.readline
+INF = sys.maxsize
+
+n = int(input())
+m = int(input())
+w_list = [[INF]*n for _ in range(n)]
+
+for i in range(m):
+    a, b, c = map(int,input().split())
+    w_list[a-1][b-1] = min(w_list[a-1][b-1],c)
+
+
+for i in range(n):
+    w_list[i][i] = 0
+
+for k in range(n):
+    for j in range(n):
+        for i in range(n):
+            if w_list[j][i] > w_list[j][k] + w_list[k][i]:
+                w_list[j][i] = w_list[j][k] + w_list[k][i]
+
+for j in range(n):
+    for i in range(n):
+        if w_list[j][i] == INF:
+            w_list[j][i] = 0
+
+for j in range(n):
+        print(' '.join(map(str,w_list[j])))

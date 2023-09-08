@@ -1,0 +1,52 @@
+# -*- coding: euc-kr -*-
+# -*- coding: cp949 -*-
+
+'''
+아이디어
+
+MST 힙으로 구현
+
+힙으로 구현해서 가장 적은 Edge 부터 순서대로 추가해 나감
+
+
+시간복잡도
+
+O(ElogV)
+
+자료구조
+
+V,E : int
+
+heap
+
+인접리스트 : [[(w,dv)]]
+'''
+
+import sys
+import heapq
+input = sys.stdin.readline
+
+V, E = map(int,input().split())
+edge = [[] for _ in range(V+1)]
+chk = [False] * (V+1)
+result = 0
+
+for i in range(E):
+    s,e,w = map(int,input().split())
+    edge[s].append([w,e])
+    edge[e].append([w,s])
+
+heap = [[0,1]]
+
+while heap:
+    w, v = heapq.heappop(heap)
+    if chk[v] == True:
+        continue
+    else:
+        chk[v] = True
+        result += w
+        for next_node in edge[v]:
+            if chk[next_node[1]] == False:
+                heapq.heappush(heap,next_node)
+
+print(result)
