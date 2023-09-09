@@ -1,2 +1,36 @@
-여러줄 들여쓰기 한칸 삭제 방법
-shift+tab
+'''
+아이디어
+DP
+점화식?
+A1 = 1
+A2 = 2
+A(T) = A(T-1) + A(T-2)
+
+시간복잡도
+재귀함수 -> O(2^1000) >> 2억
+따라서 DP로 구현
+
+자료구조
+n : int
+
+'''
+
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+
+num_list = []
+rs_list = []
+
+for i in range(0,n+1):
+    num_list.append(i)
+
+rs_list.append(0)
+rs_list.append(1)
+rs_list.append(2)
+for i in range(3,n+1):
+    rs_list.append(rs_list[i-1]+rs_list[i-2])
+
+   
+print(rs_list[n]%10007)
