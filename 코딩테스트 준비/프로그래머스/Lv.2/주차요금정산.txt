@@ -1,0 +1,76 @@
+
+
+1. dict 생성
+
+
+2. dict 내에 해당 차번호의 key 값이 있는 지 조회
+
+있으면, value 값은 (마지막 기록 시간, 누적시간, IN or OUT) 의 튜플형태로 저장
+
+만약 [2] 값이 OUT 일경우에는 저장되어있는 마지막기록시간과 현재 입력된 기록시간을 빼서 누적시간에 더한 후 마지막 기록시간을 업데이트한다.
+
+없으면, value 값은 (마지막 기록 시간,0, IN) 의 튜플형태로 저장
+차량목록 리스트에 튜플원소 (차량번호)를 추가한다
+
+
+
+for 문으로 모든 레코드 원소 순회
+
+2. 차량목록 리스트를 오름차순으로 sort 한다.
+
+3. 차량목록 리스트 인덱스를 0번째부터 참조하면서
+각 차량번호를 dict 내에서 조회한다.
+만약 value 값이 IN 일 경우
+OUT 으로 바꾸고, 마지막 기록시간을 23:59 에서 빼서 누적시간에 더한다.
+해당 차량의 누적시간 기준으로 요금을 계산하고
+요금 리스트에 저장한다.
+
+4. 요금리스트 반환.
+
+--------------------------------코드
+
+
+import math
+
+def time_subtraction(before,now):
+    
+    time = (int(now.split(":")[0]) - int(before.split(":")[0]))*60 + (int(now.split(":")[1]) - int(before.split(":")[1]))
+    
+    return time
+
+
+def solution(fees, records):
+    answer = []
+    
+    db = dict()
+    car_list = []
+    
+    for i in range(len(records)):
+        record = records[i].split()
+        if record[1] in db:
+            if record[2] == "IN":
+                db[record[1]] = (record[0],db[record[1]][1],record[2])
+            elif record[2] == "OUT":
+                time_sum = db[record[1]][1]+time_subtraction(db[record[1]][0],record[0])
+                db[record[1]] = (record[0],time_sum,record[2])
+            else:
+                raise Exception("IN 도 아니고 OUT 도 아니다?!")
+        else:
+            db[record[1]] = (record[0],0,record[2])
+            car_list.append(record[1])
+    
+    car_list.sort()
+    
+    for i in range(len(car_list)):
+        if db[car_list[i]][2] == "IN":
+            time_sum = db[car_list[i]][1]+time_subtraction(db[car_list[i]][0],"23:59")
+            db[car_list[i]] = ("23:59",time_sum,"OUT")
+        if fees[0] > db[car_list[i]][1]:
+            final_fee = fees[1]
+        else:
+            final_fee = fees[1]+math.ceil((db[car_list[i]][1]-fees[0])/fees[2])*fees[3]
+        answer.append(final_fee)
+        
+    return answer
+
+

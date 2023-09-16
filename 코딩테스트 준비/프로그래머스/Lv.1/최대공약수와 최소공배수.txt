@@ -1,0 +1,44 @@
+def multiply(arr):
+    ans = 1
+    for n in arr:
+        if n == 0:
+            return 0
+        ans *= n
+    return ans
+
+def solution(n, m):
+    answer = []
+    devisor = []
+    indi = 0
+    
+    if n > m :
+        a = m
+        m = n
+        n = a    
+        
+    while n != 1 and indi != 1:
+        for i in range(2,n+1):
+            if ( n % i == 0 ) and ( m % i == 0 ):
+                indi = 0 
+                n = n // i
+                m = m // i
+                devisor.append(i)
+                break
+            indi = 1
+            
+
+    max = multiply(devisor)
+    min = multiply(devisor)*n*m
+    
+    answer.append(max)
+    answer.append(min)
+    
+    return answer
+
+
+-----------------------------------------------------------------------------피드백
+
+
+최대 공약수 = GCD = Greatest Common Divisor
+최소 공배수 = LCM = Least Common Multiple
+유클리드 호제법 쓰면 시간복잡도를 O(logN)으로 줄일 수 있음.

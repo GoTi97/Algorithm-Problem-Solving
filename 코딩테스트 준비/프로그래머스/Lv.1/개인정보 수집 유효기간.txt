@@ -1,0 +1,35 @@
+def date_to_num(date_str):
+    yy, mm , dd = map(int, date_str.split('.'))
+    return dd + 100*(mm + 100*yy)
+
+def terms_to_dict(terms):
+    terms_dict = {}
+    for item in terms:
+        terms_category, expiration_range = item.split()
+        terms_dict[terms_category] = int(expiration_range)
+    return terms_dict
+
+def solution(today, terms, privacies):
+    answer = []
+    today_int = date_to_num(today)
+    terms_dict = terms_to_dict(terms)
+    expiration_period = []
+    for entry in privacies:
+        date_str, category = entry.split()
+        category_value = terms_dict.get(category, 0)
+        if category_value == 0:
+            raise KeyError
+        updated_month = int(category_value) + int(date_str.split('.')[1])
+        if updated_month > 12:
+            if len(str(updated_month-12)) == 1:
+                updated_month = str(0)+str(updated_month-12)
+            date_str = '.'.join([str(int(date_str.split('.')[0])+1),str(updated_month),date_str.split('.')[2]])
+        else:
+            if len(str(updated_month)) == 1:
+                updated_month = str(0)+str(updated_month)
+            date_str = '.'.join([str(int(date_str.split('.')[0])),str(updated_month),date_str.split('.')[2]])
+        expiration_period.append(date_str)
+    for i in range(len(expiration_period)):
+        if today_int >= date_to_num(expiration_period[i]):
+            answer.append(i+1)
+    return answer

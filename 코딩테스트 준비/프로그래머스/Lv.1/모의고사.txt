@@ -1,0 +1,85 @@
+def solution(answers):
+    answer = []
+
+    p_1 = [1,2,3,4,5]
+    p_2 = [2,1,2,3,2,4,2,5]
+    p_3 = [3,3,1,1,2,2,4,4,5,5]
+
+    p_1_iter = 0
+    p_2_iter = 0
+    p_3_iter = 0
+
+    p_1_correct = 0
+    p_2_correct = 0
+    p_3_correct = 0
+
+
+    for i in range(len(answers)):
+        if p_1_iter > 5:
+            p_1_iter = p_1_iter - 5
+        if p_2_iter > 8:
+            p_2_iter = p_2_iter - 8
+        if p_3_iter > 10:
+            p_3_iter = p_3_iter - 10
+
+        if answers[i] == p_1[p_1_iter]:
+            p_1_correct = p_1_correct + 1
+        if answers[i] == p_2[p_2_iter]:
+            p_2_correct = p_2_correct + 1
+        if answers[i] == p_3[p_3_iter]:
+            p_3_correct = p_3_correct + 1
+
+        p_1_iter = p_1_iter + 1
+        p_2_iter = p_2_iter + 1
+        p_3_iter = p_3_iter + 1
+
+
+    max_correct = max(p_1_correct,p_2_correct,p_3_correct)
+
+    if max_correct == p_1_correct:
+        answer.append(1)
+    if max_correct == p_2_correct:
+        answer.append(2)
+    if max_correct == p_3_correct:
+        answer.append(3)
+
+    return answer
+
+
+
+----------------------------------------------------------------제출 후 수정한 코드
+
+def solution(answers):
+    answer = []
+
+    p_1 = [1,2,3,4,5]
+    p_2 = [2,1,2,3,2,4,2,5]
+    p_3 = [3,3,1,1,2,2,4,4,5,5]
+
+    p_1_correct = 0
+    p_2_correct = 0
+    p_3_correct = 0
+
+
+    for i in range(len(answers)):
+
+        if answers[i] == p_1[i%5]:
+            p_1_correct = p_1_correct + 1
+        if answers[i] == p_2[i%8]:
+            p_2_correct = p_2_correct + 1
+        if answers[i] == p_3[i%10]:
+            p_3_correct = p_3_correct + 1
+
+    max_correct = max(p_1_correct,p_2_correct,p_3_correct)
+
+    if max_correct == p_1_correct:
+        answer.append(1)
+    if max_correct == p_2_correct:
+        answer.append(2)
+    if max_correct == p_3_correct:
+        answer.append(3)
+
+    return answer
+
+----------------------------------------------------------------피드백
+나머지만 필요할 때는 % 연산자 활용하자

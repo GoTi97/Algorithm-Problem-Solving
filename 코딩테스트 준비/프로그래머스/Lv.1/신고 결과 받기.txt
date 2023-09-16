@@ -1,0 +1,54 @@
+set 을 사용하면 중복된 원소를 알아서 제거해준다. (동일 신고 제거가능)
+
+reports = {x : 0 for x in id_list} -> id_list 에 있는 id 들을 key 값으로,
+각 key 값의 value 들은 0 으로 초기화 가능
+이런식으로 dict 를 바로 초기화하여 사용가능
+
+set 활용으로 중복된 값 삭제하는게 핵심!!
+
+
+
+-------------------------------구현
+'''
+아
+id_list chk matrix 생성(n*n)
+for report
+    report[0] -> report[1] 방문여부 체크
+    if 방문했음
+        pass
+    elif 방문 안했음
+        report[1] 신고횟수 ++
+        방문여부 True 변환
+for 최종방문횟수
+    if 횟수 > k
+        방문여부확인리스트[현재정지자인덱스] 값이 True 값인 신고자 index 전부 추출후
+        result++
+    
+시
+1,000*1,000 = 1,000,000 << 2억
+
+자
+id_list chk matrix : bool[][]
+id_list_최종신고횟수리스트 : int[]
+'''
+
+
+def solution(id_list, report, k):
+    answer = [0 for _ in range(len(id_list))]
+    chk = [[False]*len(id_list) for _ in range(len(id_list))]
+    report_score = [0 for _ in range(len(id_list))]
+    
+    for i in range(len(report)):
+        ter = report[i].split()[0]  
+        tee = report[i].split()[1]
+        if chk[id_list.index(ter)][id_list.index(tee)] == False:
+            chk[id_list.index(ter)][id_list.index(tee)] = True
+            report_score[id_list.index(tee)] += 1
+    
+    for i in range(len(report_score)):
+        if report_score[i] >= k:
+            for j in range(len(id_list)):
+                if chk[j][i] == True:
+                    answer[j] += 1
+    
+    return answer

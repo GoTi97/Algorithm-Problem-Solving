@@ -1,0 +1,58 @@
+항상 인풋값이 의도대로 잘 받아지는지
+잘 생각하고 체크해라
+
+
+--------------------구현코드
+
+import sys
+input = sys.stdin.readline
+
+
+# 아이디어
+# N값 받아서 지도 그리기
+# 2중 for문 지도 탐색을 통해 해당 노드 방문 여부 False && 해당 노드 값 1 이면 
+# DFS 호출
+# DFS 통해서 해당 단지 크기 결과값에 저장
+
+# 시간복잡도
+# 2중 포문 : N^2
+# DFS O(V+E) : V = N^2 , E = 4*N^2
+# O(N^4) = 25^4 = 39만 << 2억 = 1초내 연산가능
+
+# 자료구조
+# 맵 : int[][]
+# 방문여부 : bool[][]
+# 새로운 노드 탐색 시작시 해당 번지수 크기 저장하는 글로벌 변수: each
+dy = [0,1,0,-1]
+dx = [1,0,-1,0]
+
+def dfs(y,x):
+    global each
+    each += 1
+    for i in range(4):
+        ny = y + dy[i]
+        nx = x + dx[i]
+        if 0<=ny<n and 0<=nx<n:
+            if matrix[ny][nx] == 1 and chk[ny][nx] == False:
+                chk[ny][nx] = True
+                dfs(ny,nx)
+    return each
+
+n = int(input())
+matrix = [list(map(int,input().strip())) for _ in range(n)]
+chk = [[False]*n for _ in range(n)]
+result = []
+each = 0
+
+for j in range(n):
+    for i in range(n):
+        if matrix[j][i] == 1 and chk[j][i] == False:
+            chk[j][i] = True
+            each = 0
+            result.append(dfs(j,i))
+
+print(len(result))
+result.sort()
+for i in result:
+    print(i)
+
