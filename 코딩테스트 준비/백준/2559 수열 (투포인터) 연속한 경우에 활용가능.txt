@@ -38,6 +38,53 @@ for i in range(K,N):
 
 print(maxv)
 
+<<<<<<< HEAD
+=======
+------------------두번째 풀이
+
+'''
+아
+투포인터
+p1 1~N-K
+p2 K~N
+p1~p2 값 더한후 갱신
+
+시
+O(N) -> 100,000 << 2억
+
+자
+N,K : int
+temper : int[]
+p1: int
+p2: int
+maxt : int
+'''
+
+import sys
+input = sys.stdin.readline
+
+inf = sys.maxsize
+N,K = map(int,input().split())
+temper = list(map(int,input().split()))
+p1 = 0
+p2 = K
+maxt = -inf
+tmp = 0
+
+for i in range(K):
+    tmp += temper[i]
+
+maxt = tmp
+
+for i in range(N-K):
+    tmp = tmp-temper[p1]+temper[p2]
+    maxt = max(maxt,tmp)
+    p1 += 1
+    p2 += 1
+    
+
+print(maxt)
+>>>>>>> 08c698b322a713c39a825c3fa0eb1da250b63108
 
 
 
