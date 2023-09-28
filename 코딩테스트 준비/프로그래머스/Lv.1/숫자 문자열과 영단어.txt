@@ -1,0 +1,57 @@
+join은 문자열에 한해서만 사용가능
+따라서 int list 의 원소들을 join 으로 합치기 위해서는
+각 원소들을 map 을 이용하여 string 으로 변환 후 join 을 해주어야함
+
+try, catch 를 활용하여 int 변환시 실행당시에 에러가 났을 경우 어떻게 처리할지
+구분지어줄 수 있음.
+
+try:
+	dddd
+catch:
+	dddd
+
+
+
+'''
+아
+최대 숫자 20억 까지 인풋으로 들어올 수 있음
+완탐으로는 안됨
+글자는 최소 3글자 이기때문에
+첫번째 글자를 인트로 변환가능하면 숫자그대로 넣고
+인트로 변환이 안되면 해당 인덱스부터 3글자 받아와서 숫자로 변환
+없으면 4글자까지
+그래도 없으면 5글자까지
+
+시
+전체탐색 20억
+
+
+자
+
+'''
+
+
+def solution(s):
+    index_num = ["zero","one","two","three","four","five","six","seven","eight","nine"]
+    answer = []
+    
+    idx = 0
+    while idx < len(s):
+        try:
+            answer.append(int(s[idx]))
+            idx += 1
+        except:
+            try: 
+                answer.append(index_num.index(s[idx:idx+3]))
+                idx += 3
+            except: 
+                try:
+                    answer.append(index_num.index(s[idx:idx+4]))
+                    idx += 4
+                except:
+                    answer.append(index_num.index(s[idx:idx+5]))
+                    idx += 5
+    
+    result = int(''.join(map(str,answer)))
+    
+    return result

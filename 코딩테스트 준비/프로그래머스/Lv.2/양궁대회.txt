@@ -1,0 +1,135 @@
+
+itertool 활용하는법 잘 알아두기
+
+만약 itertool 못쓰더라도 재귀로 순열,조합 구현할 줄 알아야됨
+
+시간복잡도 초과할때는 문제의 특성을 잘 파악해서 과연 진짜로 완전탐색을 해야하는건지,
+아니면 특정케이스만 뽑아내서 시간복잡도를 줄일 수 있는지 파악해야됨. ->> 생각하기 어려움
+
+
+
+
+
+------------------------------------
+import sys
+
+#sys.setrecursionlimit(10**6)
+'''
+def solution(n, info):
+    answer = []
+    
+    answer.append((3,[1,3]))
+    return answer
+
+아
+동전문제랑 비슷 -> 그리디 -> 시간복잡도 초과
+10*10^n 개의 가짓수
+어차피 몇개 꽂는지는 중요하지 않음
+해당 점수칸을 먹을건지 말지가 중요함
+True False 로 이루어진 승패 조합 리스트 사용해서
+이기는 것들만 분류
+화살갯수 초과안하는거 분류
+sort 후 가장 적은 점수도 먹은순으로 배치후 첫번째꺼 반환
+
+시
+O(10*10^n) -> 100,000,000,000 -> 그리디로는 풀 수 없음
+
+O(2^10 * log(2^10)) = 2^10 * 10 = 10240 << 2억
+
+자
+각 점수간 별 승패 조합 리스트 wl_case : bool[][]
+info총점 score : int
+win_case : int[][]
+'''
+
+def solution(n, info):
+    
+    answer = []
+    
+    tf = [True,False]
+    
+    wl_case = []
+    
+    
+    re_info = info[::-1]
+        
+    
+    
+    def recur(num):
+        #print(num)
+        if num == 11:
+            x = 0
+            score_diff = 0
+            win_case = []
+            
+            for i in range(len(wl_case)):
+                #print(x)
+                if wl_case[i]:
+                    win_case.append(re_info[i] + 1)
+                    x += re_info[i] + 1
+                    score_diff += i
+                else:
+                    win_case.append(0)
+                    if re_info[i] != 0:
+                        score_diff -= i
+            if x <= n:
+                win_case[0] = n-x
+                #print(x)
+                answer.append([score_diff,win_case])
+                #print(answer)
+            return  
+    
+        for j in range(2):
+            wl_case.append(tf[j])
+            recur(num+1)
+            wl_case.pop()
+            
+    recur(0)
+    answer.sort()
+    
+    if answer[-1][0] <= 0:
+        return [-1]
+    else:
+        return answer[-1][1][::-1]
+
+
+---------------------------------------------------재귀 안쓰고 itertool 활용한 코드
+
+from itertools import product
+
+def solution(n, info):
+    
+    answer = []
+    
+    tf = [True,False]
+    
+    re_info = info[::-1]
+
+    for wl_case in product((True,False), repeat = 11):
+        x = 0
+        score_diff = 0
+        win_case = []
+
+        for i in range(len(wl_case)):
+            #print(x)
+            if wl_case[i]:
+                win_case.append(re_info[i] + 1)
+                x += re_info[i] + 1
+                score_diff += i
+            else:
+                win_case.append(0)
+                if re_info[i] != 0:
+                    score_diff -= i
+        if x <= n:
+            win_case[0] = n-x
+            #print(x)
+            answer.append([score_diff,win_case])
+
+    answer.sort()
+    
+    if answer[-1][0] <= 0:
+        return [-1]
+    else:
+        return answer[-1][1][::-1]
+
+

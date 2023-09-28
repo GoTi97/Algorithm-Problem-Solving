@@ -4,7 +4,7 @@
 from itertools import product
 라이브러리 제한 없으면 라이브러리 사용해도 됨
 
-global 리스트 활용해서 리스트 만들때 재귀 안에서 왜 빈리스트로 리턴되는지 공부하기
+백트래킹 종료조건 안에서 처리해줘야함
 
 for buy_percent, max_price in users: 이런식으로 리스트내 원소 바로 변수명으로
 받아오는거 익숙하게 만들기

@@ -1,0 +1,42 @@
+5분컷 문제
+
+'''
+아
+그냥 각 lottos 의 원소들이 win_num 안에 들어있는지 안들어있는지만
+알면됨
+그럼 0 인거는 다 당첨했다고 판단할수도있고 다 당청 안됐다고 판단할수도있음
+다 당첨 -> 최고
+다 꽝 -> 최저
+
+for 첫번째 원소부터 당첨번호에 있는지 없는지 확인
+    만약 첫번째 원소가 0 이라면 zero_cnt ++
+    0이 아니라면 cnt ++
+    
+다 돌았으면
+    최고 당첨등수는 7-cnt+zero_cnt
+    최저 당첨등수는 7-cnt
+
+시
+O(6*6)
+
+자
+zero_cnt = int
+
+'''
+
+def solution(lottos, win_nums):
+    answer = []
+    zero_cnt = 0
+    cnt = 0
+
+    for i in range(len(lottos)):
+        if lottos[i] == 0:
+            zero_cnt += 1
+        else:
+            if lottos[i] in win_nums:
+                cnt += 1
+    answer.append(min(6,7-cnt-zero_cnt))
+    answer.append(min(6,7-cnt))
+    
+    
+    return answer
