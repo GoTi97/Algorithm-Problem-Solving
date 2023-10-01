@@ -1,0 +1,92 @@
+'''
+아
+시뮬레이션
+백터 좌표 활용
+bfs 구현
+맨헤튼 거리 계산 구현
+
+2중 포문으로 각 원소 탐색
+만약 P가 나오면 bfs 시작
+bfs 한칸 움직일 때마다 cnt++ 만약 bfs 시작전 cnt가 3이면 시작안하고 끝냄
+bfs 하는 도중 X가 나오면 해당 가지치기 빠져나오기
+bfs 하는 도중 P가 나오면 모든 bfs 중단 후 0 추가
+모든 bfs 통과하면 1추가 
+새로시작할때는 방문여부 체크해야함
+
+bfs 구현은 힙큐로 가능
+bfs(cnt,x,y)
+
+시
+bfs nlogn
+25*log25 << 2억
+
+자
+bfs
+방문여부체크리스트 : bool[][]
+
+
+암
+백시투이그
+'''
+import queue
+    
+def solution(places):
+    global matrix
+    
+    answer = []
+    
+    dy = [0,1,0,-1]
+    dx = [1,0,-1,0]
+    
+    def bfs(cnt,y,x):
+        global matrix
+        #print("Im Person:",y,x)
+        chk = [[False]*5 for _ in range(5)]
+        chk[y][x] = True
+        
+        q = queue.Queue()
+        
+        for i in range(4):
+            ny = y + dy[i]
+            nx = x + dx[i]
+            if 0<= ny <= 4 and 0 <= nx <= 4:
+                #print(ny,nx)
+                q.put((cnt+1,ny,nx))
+        
+        while q.qsize():
+            #print("qsize:",q.qsize())
+            c, ly, lx = q.get()
+            
+            if c > 2:
+                continue
+            case = matrix[ly][lx]
+            #print("IM:",case)
+            #print("x:",ly,"y:",lx)
+            #print("qsize:",q.qsize())
+            #print("-------------")
+            if case == "P":
+                if c <= 2:
+                    return 0
+            elif case == "X":
+                pass
+            elif case == "O":
+                chk[ly][lx] = True
+                for i in range(4):
+                    ny = ly + dy[i]
+                    nx = lx + dx[i]
+                    if 0<= ny <= 4 and 0 <= nx <= 4:
+                        if not chk[ny][nx]:
+                            #print(ny,nx)
+                            q.put((c+1,ny,nx))
+        return 1
+            
+    for k in range(len(places)):
+        matrix = places[k]
+        rs = 1
+        for j in range(len(matrix)):
+            for i in range(len(matrix[j])):
+                if matrix[j][i] == "P":
+                    rs *= bfs(0,j,i)
+        answer.append(rs)        
+    
+    return answer
