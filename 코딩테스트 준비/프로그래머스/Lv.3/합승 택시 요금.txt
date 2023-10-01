@@ -1,0 +1,75 @@
+1시간 15분
+플로이드 와샬
+중간지점이 제일 바깥포문이다!
+제발 실수좀 그만해라 ㅠㅠ
+다익스트라로 구현해서 시간복잡도 
+낮추는 방법도 생각해보기
+
+'''
+아
+최저이동경로
+다익스트라로 구현
+s 에서 a를 먼저갔다가 a 에서 b 가는 경우 -> case1
+s 에서 b를 먼저갔다가 b 에서 a 가는 경우 -> case2
+s 에서 a + s 에서 b 가는 경우 -> case3
+
+case 1,2,3 중 최소값 리턴
+
+플로이드와샬 구현
+2차원배열에서
+3중포문구현
+플로이드와샬(s,m,e):
+2차원 배열 생성
+무한대로 초기화
+자기자신으로 가는거 0 으로 초기화
+for i in range(len(s)):
+    for j in range(len(e)):
+        for k in range(len(m)):
+            matrix[s][e] = min(matrix[s][e], matrix[s][m]+matrix[m][e])
+
+
+
+시
+O(V^3) = 8,000,000
+
+자
+
+암
+MST(모든노드를 잇는 최소간선) 
+다익스트라(한노드에서 다른노드로갈때 최소간선) 
+플루이드와샬(모든노드에서 모든노드로 갈때 최소간선)
+
+'''
+import sys
+
+def solution(n, s, a, b, fares):
+    #print(s,a,b)
+    answer = 0
+    INF = sys.maxsize
+    
+    matrix = [[INF]*(n+1) for _ in range(n+1)]
+    
+    for i in  range(1,n+1):
+        matrix[i][i] = 0
+    
+    for st,ed,c in fares:
+        matrix[st][ed] = c
+        matrix[ed][st] = c
+
+    for k in range(1,n+1):
+        for i in range(1,n+1):
+            for j in range(1,n+1):
+                matrix[i][j] = min(matrix[i][j], matrix[i][k] + matrix[k][j])
+    
+    def hapseung(s,a,b):
+        #print(s,a,b)
+        cost = matrix[s][a]+matrix[s][b]
+        for m in range(1,n+1):
+            cost = min(cost,matrix[s][m]+matrix[m][a]+matrix[m][b])
+            #print(cost,matrix[s][m]+matrix[m][a]+matrix[m][b])
+        return cost
+
+    answer = hapseung(s,a,b)
+        
+        
+    return answer
