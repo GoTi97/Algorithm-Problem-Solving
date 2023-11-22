@@ -16,7 +16,6 @@ V,E : int
 start : int
 minimum_dist : int[] (V+1)
 인접리스트 : int[[w,nd]] (V+1)
-chk : bool[]
 '''
 import sys
 import heapq
