@@ -1,0 +1,102 @@
+퍼센트 중복 순열 재귀함수 만드는게 어려웠음
+백트래킹 익숙하게 만들기
+
+from itertools import product
+라이브러리 제한 없으면 라이브러리 사용해도 됨
+
+백트래킹 종료조건 안에서 처리해줘야함
+
+for buy_percent, max_price in users: 이런식으로 리스트내 원소 바로 변수명으로
+받아오는거 익숙하게 만들기
+
+zip(emoticons, p): -> 각 원소 동일 인덱스 끼리 묶은 리스트 반환
+
+
+-------------------------------------
+'''
+아
+동전문제랑 유사 -> 그리디
+
+먼저 가입자를 최대로 늘리는 방법 확인
+최대 가입자수를 유지하는 한에서 판매액을 최대로 늘리는 방법 만들기
+
+
+특정할인테이블을 만드는 함수
+특정할인테이블이 들어왔을때 계산하는 함수
+
+시
+각퍼센티지에 대해서 4가지 경우, 이모티콘은 최대 7개
+4^7*100*7 = 2^14*100*7 ~ 10240000 << 2억
+
+자
+각 이모티콘별 (가격,할인율) 튜플 리스트 : int[]
+가입자 수 n : int
+전체합 가격 sum : int
+
+
+'''
+
+max_n = 0
+
+max_sum = 0
+
+def solution(users, emoticons):
+    answer = []
+    
+    emo_table = []
+    
+    emo_matrix = []
+    
+    num_emo = len(emoticons)
+
+
+    
+    def cal_n_sum(emo_table):
+        #print(emo_table)
+        temp_n = 0
+        temp_sum = 0
+        for i in range(len(users)):
+            agreeable_sale = users[i][0]
+            spent = 0
+            for j in range(len(emo_table)):
+                if emo_table[j] >= agreeable_sale:
+                    spent += int(emoticons[j]*(100-emo_table[j])//100)
+            if spent >= users[i][1]:
+                temp_n += 1
+            else: 
+                temp_sum += spent
+        return temp_n, temp_sum
+    
+    def select_sale(num):
+        global max_n
+        global max_sum
+        
+        if num == num_emo:
+            
+            tmp_n, tmp_sum = cal_n_sum(emo_table)
+            
+            if tmp_n > max_n:
+                max_n = tmp_n
+                max_sum = tmp_sum
+            elif tmp_n == max_n:
+                if tmp_sum > max_sum:
+                    max_sum = tmp_sum
+            return  
+        for i in range(1,5):
+            emo_table.append(i*10)
+            
+            select_sale(num+1)
+            emo_table.pop()
+    
+    select_sale(0)
+    
+    return [max_n,max_sum]
+'''
+def solution(users, emoticons):
+    
+    def hi(a,b):
+        return a,b
+    c,d = hi(2,3)
+    print(c,d)    
+    return c
+'''

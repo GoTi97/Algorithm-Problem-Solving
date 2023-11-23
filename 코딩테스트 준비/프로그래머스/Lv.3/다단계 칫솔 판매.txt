@@ -1,0 +1,68 @@
+시간복잡도를 줄일 방법이 생각나지 않으면
+조건문을 활용해서 예외 케이스를 줄이는 것으로 연산 수를 대폭 줄일 수도 있다.
+특히 재귀에서 연산량을 많이 줄일 수 있다.
+
+'''
+아
+가장 깊은 사람부터 처리해야함
+
+dfs 역순 빠져나올때(stack 으로구현)
+
+seller는 count 나 set 통해서 통일 시키는 방법 생각
+
+parent = referral
+children = enroll
+
+seller와 amount 를 고유값으로 통합시키는 방법 고안
+
+enroll 의 역순으로 계산시작
+수수료지불과정은 enroll 의 같은 index 의 referral 에게 준 후
+해당 referral 인원이 또 부모가 있는지 확인
+있으면 없을때까지 계속 수수료지불
+
+dict 에 자신: (번돈총합,판매량,부모)를 저장
+
+시
+10만 * 1만 = 1,000,000,000
+
+자
+dict: key:name, value:parent,amount,sum
+'''
+ 
+
+def solution(enroll, referral, seller, amount):
+    answer = []
+    db = dict()
+    
+    for i in range(len(enroll)):
+        db[enroll[i]] = [referral[i], 0, 0]
+    
+    def calculation(pname,money):
+        if pname != '-':
+            newfee = int(money*0.1)
+            if newfee == 0:
+                return
+            db[pname][2] -= newfee
+            try:
+                db[db[pname][0]][2] += newfee
+            except:
+                pass
+            calculation(db[pname][0],newfee)
+        else:
+            pass
+    
+    for i in range(len(seller)):
+        fee = int(amount[i]*100*0.1)
+        db[seller[i]][2] += amount[i]*100 - fee
+        if fee == 0:
+            continue
+        try:
+            db[db[seller[i]][0]][2] += fee
+            calculation(db[seller[i]][0],fee)
+        except:
+            pass 
+
+    for name in db:
+        answer.append(db[name][2])
+    
+    return answer

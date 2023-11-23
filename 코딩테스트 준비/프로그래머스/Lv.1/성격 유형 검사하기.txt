@@ -1,0 +1,59 @@
+list.index('~~') -> 해당 원소의 인덱스 위치 반환
+문자열 뒤집기 -> [::-1]
+
+dict 사용하기 !!
+
+
+--------------------------------------코드구현
+
+
+'''
+아
+RT
+CF
+JM
+AN
+각 항목에 대해서 점수표시
+for survey
+    if str 이 거꾸로 되어있으면 똑바로 만들고 8-a 를 새로저장
+
+for survey
+    각 survey 가 어느항목에 해당하는지 조사 후
+    최종결과 점수지에 점수 기록
+
+for 최종점수표
+    각 인덱스 점수 확인후 결과 출력
+
+시
+1000
+
+자
+최종 점수표 : int[RT,CF,JM,AN]
+
+'''
+
+def solution(survey, choices):
+    answer = ''
+    right_order = ['RT','CF','JM','AN']
+    result_score = [0,0,0,0]
+    '''
+    for survey
+    if str 이 거꾸로 되어있으면 똑바로 만들고 8-a 를 새로저장
+    '''
+    for i in range(len(survey)):
+        if not survey[i] in right_order:
+            survey[i] = survey[i][::-1]
+            choices[i] = 8-choices[i] 
+    
+    for i in range(len(survey)):
+        result_score[right_order.index(survey[i])] += choices[i]-4    #각 survey 가 어느항목에 해당하는지 조사 후
+                                                                    #최종결과 점수지에 점수 기록
+
+    
+    for i in range(len(result_score)):      #각 인덱스 점수 확인후 결과 출력
+        if result_score[i] <= 0:
+            answer += right_order[i][0]
+        else:
+            answer += right_order[i][1]
+            
+    return answer

@@ -38,6 +38,8 @@ for i in range(K,N):
 
 print(maxv)
 
+<<<<<<< HEAD
+=======
 ------------------두번째 풀이
 
 '''
@@ -82,6 +84,7 @@ for i in range(N-K):
     
 
 print(maxt)
+>>>>>>> 08c698b322a713c39a825c3fa0eb1da250b63108
 
 
 

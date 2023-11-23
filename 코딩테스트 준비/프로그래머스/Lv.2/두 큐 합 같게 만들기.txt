@@ -1,0 +1,179 @@
+collections import 해서 deque 활용
+
+list.pop(0) 로 리스트의 첫번째원소를 뽑아올수 있긴하지만,
+시간복잡도가 O(n) 이 소모된다.
+
+특정 조건 만족후 아래 코드 실행시키고 싶지 않으면
+조건문안에서 return 때려버려도 괜찮음
+
+프로그래머스 받아오는 argument 이름이 너무 길면 그냥 내가 짧게 수정해서 써도됨
+
+
+
+
+-------------------------------
+'''
+아
+전체합 / 2 가 각 배열이 가져야하는 전체합임
+전체합보다 크면 큰배열에서 빼서 작은배열로 넣음
+어떤 경우에도 원소합이 같아질수 없는 경우는 전체합이 홀수인 경우
+또는 절반한 것보다 더 큰 원소가 있는 경우
+
+문제 -> 계속해서 합을 계산해야함, 시간복잡도?
+
+for q1 길이 + q2 길이
+    q1 합 + q2 합 -> 전체합 구하기
+전체합/2 -> 각 q가 가져야될 합
+
+while cnt <= q1길이+q2길이 && q1합 != q2합
+    if q1 합 < 전체합/2:
+        q1 에서 1개 pop & q2 에 insert
+        q1합 뺀 원소만큼 --
+    elif q1 합 > 전체합/2:
+        q2 에서 1개 pop & q1 에 insert
+        q2합 뺀 원소만큼 --
+
+if cnt > q1길이+q2길이:
+    print(-1)
+else:
+    print(cnt)
+    
+    
+시
+못해도 각 모든 원소를 한번씩은 옮겨봐야함
+O(n) = 300,000 << 2억
+
+
+자
+q1 sum : int
+q2 sum : int
+target sum : int
+cnt : int
+'''
+import collections
+
+def solution(queue1, queue2):
+    q1 = collections.deque(queue1)
+    q2 = collections.deque(queue2)
+    q1_sum = 0
+    q2_sum = 0
+    t_sum = 0
+    cnt = 0
+    chk = False
+    
+    for i in range(len(queue1)):
+        q1_sum += queue1[i]
+    for i in range(len(queue2)):
+        q2_sum += queue2[i]
+    
+    t_sum = (q1_sum + q2_sum)//2
+    
+    for i in range(len(queue1)):
+        if t_sum < queue1[i]:
+            chk = True
+    for i in range(len(queue2)):
+        if t_sum < queue2[i]:
+            chk = True
+    
+    while cnt <= 2*(len(q1)+len(q2)) and q1_sum != q2_sum:
+        if q1_sum > t_sum:
+            a = q1.popleft()
+            q2.append(a)
+            cnt += 1
+            q1_sum -= a
+            q2_sum += a
+        elif q1_sum < t_sum:
+            a = q2.popleft()
+            q1.append(a)
+            cnt += 1
+            q1_sum += a
+            q2_sum -= a
+    
+    if cnt > 2*(len(q1)+len(q2)) or (q1_sum + q2_sum)%2 ==1 or chk == True:
+        cnt = -1
+    
+    return cnt
+
+
+
+
+---------------------------------개선 후 코드
+
+'''
+아
+전체합 / 2 가 각 배열이 가져야하는 전체합임
+전체합보다 크면 큰배열에서 빼서 작은배열로 넣음
+어떤 경우에도 원소합이 같아질수 없는 경우는 전체합이 홀수인 경우
+또는 절반한 것보다 더 큰 원소가 있는 경우
+
+문제 -> 계속해서 합을 계산해야함, 시간복잡도?
+
+for q1 길이 + q2 길이
+    q1 합 + q2 합 -> 전체합 구하기
+전체합/2 -> 각 q가 가져야될 합
+
+while cnt <= q1길이+q2길이 && q1합 != q2합
+    if q1 합 < 전체합/2:
+        q1 에서 1개 pop & q2 에 insert
+        q1합 뺀 원소만큼 --
+    elif q1 합 > 전체합/2:
+        q2 에서 1개 pop & q1 에 insert
+        q2합 뺀 원소만큼 --
+
+if cnt > q1길이+q2길이:
+    print(-1)
+else:
+    print(cnt)
+    
+    
+시
+못해도 각 모든 원소를 한번씩은 옮겨봐야함
+O(n) = 300,000 << 2억
+
+
+자
+q1 sum : int
+q2 sum : int
+target sum : int
+cnt : int
+'''
+import collections
+
+def solution(queue1, queue2):
+    q1 = collections.deque(queue1)
+    q2 = collections.deque(queue2)
+    q1_sum = 0
+    q2_sum = 0
+    t_sum = 0
+    cnt = 0
+    
+    q1_sum,q2_sum = sum(q1), sum(q2)
+    if (q1_sum + q2_sum)%2:
+        return -1
+        
+    t_sum = (q1_sum + q2_sum)//2
+    
+    queue3 = queue1 + queue2
+    for i in range(len(queue3)):
+        if t_sum < queue3[i]:
+            return -1
+    
+    while cnt <= 2+len(q1)+len(q2) and q1_sum != q2_sum:
+        if q1_sum > t_sum:
+            a = q1.popleft()
+            q2.append(a)
+            cnt += 1
+            q1_sum -= a
+            q2_sum += a
+        elif q1_sum < t_sum:
+            a = q2.popleft()
+            q1.append(a)
+            cnt += 1
+            q1_sum += a
+            q2_sum -= a
+    
+    if cnt > 2+len(queue3):
+        return -1
+    
+    return cnt
+

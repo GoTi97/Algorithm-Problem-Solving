@@ -1,0 +1,104 @@
+collections 의 내장함수인 Counter 와 items 를 활용하여
+key,value 값으로 리스트내 고유값 갯수를 받아올 수 있음
+
+dict 활용이 너무 약함 dict 활용 실력 늘리기
+
+'''
+아
+combination 을 활용해서 각 메뉴 갯수당 가능한 모든 조합의 수를 list에 저장
+counter 함수를 활용하여 해당 리스트에 각 메뉴가 몇번 주문되었는지 확인
+counter 를 순회하면서 각 course 갯수에 해당하는 최대주문 음식을 dict에 저장
+
+시
+20*10*2^20 ~~ 1,000,000 * 200 = 200,000,000 = 약 1초(?)
+
+자
+
+암
+백시투이그
+'''
+from itertools import combinations
+from collections import Counter
+
+
+def solution(orders, course):
+    answer = []
+    
+    o_list = []
+    
+    ordered =  []
+    
+    for order in orders:
+        for c in course:
+            o_list.append(list(combinations(order,c)))
+    
+    for y in o_list:
+        for x in y:
+            ordered.append(''.join(sorted(x)))
+            
+    #print(Counter(ordered).items())
+    
+    _dict = {k: [2] for k in course}
+    
+    for k,v in Counter(ordered).items():
+        if v > _dict[len(k)][0]:
+            _dict[len(k)] = [v,k]
+        elif v == _dict[len(k)][0]:
+            _dict[len(k)].append(k)
+    
+    #print(_dict)
+    for c in course:
+        for x in _dict[c][1:]:
+            answer.append(x)
+    
+    return sorted(answer)
+
+
+------------------------------- 메모리 할당 개선 코드
+
+'''
+아
+combination 을 활용해서 각 메뉴 갯수당 가능한 모든 조합의 수를 list에 저장
+counter 함수를 활용하여 해당 리스트에 각 메뉴가 몇번 주문되었는지 확인
+counter 를 순회하면서 각 course 갯수에 해당하는 최대주문 음식을 dict에 저장
+
+시
+
+
+자
+
+암
+백시투이그
+'''
+from itertools import combinations
+from collections import Counter
+
+
+def solution(orders, course):
+    answer = []
+    
+    o_list = []
+    
+    ordered =  []
+    
+    for order in orders:
+        for c in course:
+            o_list += list(combinations(sorted(order),c))
+            
+    #print(Counter(ordered).items())
+    
+    o_dict = {k: [2] for k in course}
+    
+    for k,v in Counter([''.join(x) for x in o_list]).items():
+        if v > o_dict[len(k)][0]:
+            o_dict[len(k)] = [v,k]
+        elif v == o_dict[len(k)][0]:
+            o_dict[len(k)].append(k)
+    
+    print(o_dict)
+    
+    for c in course:
+        for x in o_dict[c][1:]:
+            answer.append(x)
+    
+    return sorted(answer)

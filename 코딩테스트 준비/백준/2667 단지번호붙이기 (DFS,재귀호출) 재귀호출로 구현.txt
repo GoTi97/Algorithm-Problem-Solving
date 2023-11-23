@@ -56,6 +56,8 @@ result.sort()
 for i in result:
     print(i)
 
+<<<<<<< HEAD
+=======
 
 
 --------------------------BFS 로 구현하기
@@ -123,3 +125,4 @@ print(len(rs_list))
 for i in range(len(rs_list)):
     print(rs_list[i])
 
+>>>>>>> 08c698b322a713c39a825c3fa0eb1da250b63108
