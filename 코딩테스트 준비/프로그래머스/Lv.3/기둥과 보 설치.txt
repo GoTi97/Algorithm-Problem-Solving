@@ -1,0 +1,148 @@
+'''
+조건 만족성
+기둥은 바닥 위에 있거나 보의 한쪽 끝 부분 위에 있거나, 또는 다른 기둥 위에 있어야 합니다.
+보는 한쪽 끝 부분이 기둥 위에 있거나, 또는 양쪽 끝 부분이 다른 보와 동시에 연결되어 있어야 합니다.
+[x, y, a, b]
+[가로 좌표, 세로 좌표, 0은 기둥 / 1은 보 - type , 0은 삭제 / 1은 설치 - action]
+
+아
+
+시뮬레이션
+조건만족성
+에러핸들링
+try catch
+기둥을 놓는 함수
+보를 놓는 함수
+각각 구현후 조건 맞지 않으면 에러 발생 시켜서 try 실행안되게 만들기
+조건 맞으면 try 진행
+
+시
+
+자
+
+'''
+result = []
+
+def solution(n, build_frame):
+    
+    
+    def in_result(x,y,typ):
+        global result
+        if [x,y,typ] in result:
+            return True
+        else:
+            return False
+
+    def can_add_kidoong(x,y): #설치할때는 설치되는 것이 조건을 만족하는지 확인
+        global result
+        #기둥은 바닥 위에 있거나
+        #보의 한쪽 끝 부분 위에 있거나,
+        #또는 다른 기둥 위에 있어야 합니다.
+        if y == 0 or in_result(x-1,y,1) or in_result(x,y,1) or in_result(x,y-1,0):
+            return True
+        else:
+            return False
+
+    def can_delete_kidoong(x,y): #삭제할때는 그 주변 보와 기둥이 조건을 만족하는지 확인
+        #즉, 삭제하는 기둥의 위와 아래에 맞닿아있는 구조물들이 다시 설치한다고 했을때, 해당 구조물을 다시 설치하는 조건을 만족하는지 확인
+        global result
+        
+        can = True
+        
+        try:
+            result.remove([x,y,0])
+        except:
+            return False
+        
+        if in_result(x,y-1,0): #1
+            if not can_add_kidoong(x,y-1):
+                can = False
+                
+        if in_result(x,y+1,0): #2
+            if not can_add_kidoong(x,y+1):
+                can = False
+                
+        if in_result(x-1,y,1): #3
+            if not can_add_bo(x-1,y):
+                can = False
+                
+        if in_result(x-1,y+1,1): #4
+            if not can_add_bo(x-1,y+1):
+                can = False
+                
+        if in_result(x,y,1): #5
+            if not can_add_bo(x,y):
+                can = False
+                
+        if in_result(x,y+1,1): #6
+            if not can_add_bo(x,y+1):
+                can = False
+        
+        result.append([x,y,0])
+        
+        return can
+        
+    def can_add_bo(x,y): #설치할때는 설치되는 것이 조건을 만족하는지 확인
+        global result
+        #보는 한쪽 끝 부분이 기둥 위에 있거나, 
+        #in_result(x,y-1,0) or in_result(x+1,y-1,0) 
+        #또는 양쪽 끝 부분이 다른 보와 동시에 연결되어 있어야 합니다.
+        #in_result(x-1,y,1) or in_result(x+1,y,1)
+        if in_result(x,y-1,0) or in_result(x+1,y-1,0) or (in_result(x-1,y,1) and in_result(x+1,y,1)):
+            return True
+        else:
+            return False
+
+    def can_delete_bo(x,y): #삭제할때는 그 주변 보와 기둥이 조건을 만족하는지 확인
+        #즉, 삭제하는 기둥의 위와 아래에 맞닿아있는 구조물들이 다시 설치한다고 했을때, 해당 구조물을 다시 설치하는 조건을 만족하는지 확인
+        global result
+        can = True
+        
+        try:
+            result.remove([x,y,1])
+        except:
+            return False
+        
+        if in_result(x,y,0): #1
+            if not can_add_kidoong(x,y):
+                can = False
+        if in_result(x,y-1,0): #2
+            if not can_add_kidoong(x,y-1):
+                can = False
+        if in_result(x+1,y-1,0): #3
+            if not can_add_kidoong(x+1,y-1):
+                can = False
+        if in_result(x+1,y,0): #4
+            if not can_add_kidoong(x+1,y):
+                can = False
+        if in_result(x-1,y,1): #5
+            if not can_add_bo(x-1,y):
+                can = False
+        if in_result(x+1,y,1): #6
+            if not can_add_bo(x+1,y):
+                can = False
+        result.append([x,y,1])
+            
+        return can
+    
+    #iter_ = 0
+    for x,y,typ,action in build_frame:
+        
+        #print(iter_,":",result)
+        #iter_ += 1
+        if typ == 0 and action == 1: #기둥설치
+            if can_add_kidoong(x,y):
+                result.append([x,y,typ])
+        if typ == 0 and action == 0: #기둥삭제
+            if can_delete_kidoong(x,y):
+                result.remove([x,y,typ])
+        if typ == 1 and action == 1: #보설치
+            if can_add_bo(x,y):
+                result.append([x,y,typ])
+        if typ == 1 and action == 0: #보삭제
+            if can_delete_bo(x,y):
+                result.remove([x,y,typ])
+                
+        result.sort()
+        
+    return result

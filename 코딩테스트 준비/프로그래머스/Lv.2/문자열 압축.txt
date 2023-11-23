@@ -1,0 +1,99 @@
+'''
+8시7분시작
+
+아
+큰단위일수록 압축률이 높음
+길이만큼 반복횟수를 숫자로 퉁칠수 있어서
+가능한 긴 단위만큼 압축하면 좋음
+2개짜리는 압축해도 의미없음
+3개반복부터 압축하면 의미있음
+스택활용
+리스트 인덱스활용
+
+작은단위반복은 큰단위반복에 포함될 수 있는가? -> o
+분할정복 -> 2,3,4,5 . . . 문자길이가 더 길어지면 stop
+숫자 단위로 스플릿을 나눌 수 있음
+숫자 두개가 겹칠수는 없음
+
+몇개단위로 자를지 1개 숫자만 선택해야됨
+반드시 더큰 단위로 자른것이 더 작은길이라는 보장이 없음 -> 잘라봐야암. 완전탐색
+문자열은 제일 앞부터 순차적으로 자르기만함
+
+i = 1~len(s)//2까지 앞에서부터 순차적으로 잘라서 i개 길이의 새로운 2중리스트를 만든다
+맨뒤의 원소부터 1개씩 pop
+만약 먼저뽑은 리스트와 나중뽑은 리스트가 같으면, 
+    하나를 지우고, 맨앞에 숫자2부터 한개씩 증가
+만약 다르면,
+    먼저뽑은 리스트를 새로운 리스트에 넣고,
+    나중뽑은 리스트에 대해서 계속 이어나감
+join해서 최종적인 리스트 길이를 반환 (거꾸로해서 join해야 원래 의도한 글자가 나오지만, 그냥 조인해서 시간 단축)
+max 값에 저장 후 업데이트
+
+시
+O(n) 의 시간복잡도
+i = 1~len(s)//2까지 앞에서부터 순차적으로 잘라서 i개 길이의 새로운 2중리스트를 만든다
+맨뒤의 원소부터 1개씩 pop
+만약 먼저뽑은 리스트와 나중뽑은 리스트가 같으면, 
+    하나를 지우고, 맨앞에 숫자2부터 한개씩 증가
+만약 다르면,
+    먼저뽑은 리스트를 새로운 리스트에 넣고,
+    나중뽑은 리스트에 대해서 계속 이어나감
+join해서 최종적인 리스트 길이를 반환 (거꾸로해서 join해야 원래 의도한 글자가 나오지만, 그냥 조인해서 시간 단축)
+max 값에 저장 후 업데이트
+
+자
+max : int
+split_list = string[][]
+apchook_list = string[][]
+
+'''
+import sys
+def solution(s):
+    INF = sys.maxsize
+    
+    min_len = INF
+    
+    if len(s) == 1:
+        return 1
+    # i = 1~len(s)//2까지 앞에서부터 순차적으로 잘라서 i개 길이의 새로운 2중리스트를 만든다
+    for split_size in range(1,(len(s)//2)+1):
+        #print("split_size:",split_size)
+        index = 0
+        split_list = []
+        while index+split_size <= len(s):
+            split_list.append(s[index:index+split_size])
+            index += split_size
+        if index != len(s):
+            split_list.append(s[index:])
+        #print("split_list:",split_list)
+        # 맨뒤의 원소부터 1개씩 pop
+        first = split_list.pop()
+        cnt = 1
+        apchook_list = []
+        while split_list:
+            second = split_list.pop()
+            # 만약 먼저뽑은 리스트와 나중뽑은 리스트가 같으면,
+            if first == second:
+                cnt += 1
+            #     하나를 지우고, 맨앞에 숫자2부터 한개씩 증가
+            # 만약 다르면,
+            else:
+                if cnt >= 2:
+            #     먼저뽑은 리스트를 새로운 리스트에 넣고,
+                    apchook_list.append(str(cnt)+first)
+                    cnt = 1
+                else:
+                    apchook_list.append(first)
+                first = second
+        if cnt >= 2:
+            apchook_list.append(str(cnt)+first)
+        else:
+            apchook_list.append(first)
+            #     나중뽑은 리스트에 대해서 계속 이어나감
+        # join해서 최종적인 리스트 길이를 반환 (거꾸로해서 join해야 원래 의도한 글자가 나오지만, 그냥 조인해서 시간 단축)
+        # max 값에 저장 후 업데이트
+        final_apchook_list = ''.join(reversed(apchook_list))
+        min_len = min(min_len,len(final_apchook_list ))
+        #print("final:",final_apchook_list)
+        
+    return min_len
