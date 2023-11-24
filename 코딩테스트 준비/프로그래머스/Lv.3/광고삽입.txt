@@ -1,0 +1,164 @@
+'''
+피드백
+
+시간문제를 풀때는 단위를 가장 작은 단위로 통일하여 풀면 쉬움 >> 초단위로 통일
+최대한 이중포문을 쓰지않고 선형시간내 풀수있는 로직을 찾는것이 핵심인 문제
+
+투포인터
+각 포인트들부터 다음 포인트까지 합 완전탐색 후
+각 포인트 기준(앞부분 포인트, 뒷부분 포인트) 완전탐색 후 누적 광고 시간이 가장 많은 시작시간이 정답 
+
+시간 관리 함수
+특정시간 안에 포함되는지 여부 체크 함수
+
+공익광고 재생시간 == 동영상 재생시간 -> 그냥 시작시간 반환
+
+완전탐색 100시간
+100*60*60 = 360000
+
+아
+map: 각 시간별 포인트,시작시간 포인트 기준 다음 포인트까지 인원수합
+
+먼저 log에서 각 포인트들 수집 해서 다 0으로 초기화
+그 다음 시작시간-끝시간 받아서, 시작시간<= 타겟 < 끝시간 사이에 있는 key 값들 value 하나씩 ++
+다끝나면 각 시작시간기준 다음포인트까지 인원수합 map 완성
+
+map 정렬하고,
+맨앞시간부터 순서대로 광고시작시간을 매칭시킴
+광고시작시간<= 타겟 < 광고끝시간 의 조건을 만족하는 시작시간 key 값들 순서대로 받아옴
+(앞에 key값~뒤에key값 차이) * 앞에 키 value 값 을 모든 key 에 대해 수행
+만약 마지막 거에 대해서 뒤에 key 값이 존재하지 않으면, 뒤에key 를 광고 끝시간으로 대체
+광고 누적시간 값이 가장 큰 값의 광고시작시간을 업데이트
+
+동일한 매커니즘을 맨뒤시간부터 순서대로 광고끝시간을 매칭시키는 방법을 동일하게 적용
+광고시작시간< 타겟 <= 광고끝시간 의 조건을 만족하는 시작시간 key 값들 순서대로 받아옴
+(앞에 key값~뒤에key값 차이) * 앞에 키 value 값 을 모든 key 에 대해 수행
+만약 첫번째 거에 대해서 앞에 key 값이 존재하지 않으면, 앞에 key 를 광고시작시간으로 대체
+광고 누적시간 값이 가장 큰 값의 광고시작시간을 업데이트
+
+시
+logs 최대 30만개 >>> n
+시간 포인트 최대 60만개 >>> 2n
+
+먼저 log에서 각 포인트들 수집 해서 다 0으로 초기화 >>> 2n
+그 다음 시작시간-끝시간 받아서, 시작시간<= 타겟 < 끝시간 사이에 있는 key 값들 value 하나씩 ++ >>> n
+다끝나면 각 시작시간기준 다음포인트까지 인원수합 map 완성
+
+map 정렬하고, >>> nlog(n)
+맨앞시간부터 순서대로 광고시작시간을 매칭시킴 >>> 2n
+    광고시작시간<= 타겟 < 광고끝시간 의 조건을 만족하는 시작시간 key 값들 순서대로 받아옴 >>> 2n
+    (앞에 key값~뒤에key값 차이) * 앞에 키 value 값 을 모든 key 에 대해 수행 
+    만약 마지막 거에 대해서 뒤에 key 값이 존재하지 않으면, 뒤에key 를 광고 끝시간으로 대체
+    광고 누적시간 값이 가장 큰 값의 광고시작시간을 업데이트
+
+동일한 매커니즘을 맨뒤시간부터 순서대로 광고끝시간을 매칭시키는 방법을 동일하게 적용
+    광고시작시간< 타겟 <= 광고끝시간 의 조건을 만족하는 시작시간 key 값들 순서대로 받아옴
+    (앞에 key값~뒤에key값 차이) * 앞에 키 value 값 을 모든 key 에 대해 수행
+    만약 첫번째 거에 대해서 앞에 key 값이 존재하지 않으면, 앞에 key 를 광고시작시간으로 대체
+    광고 누적시간 값이 가장 큰 값의 광고시작시간을 업데이트
+    자
+
+최대 4n^2
+O(n^2) 9,0000,000,000 -> 시간 초과
+
+애초에 log가 정렬되 있으면
+시작시간 광고시간안에 포함되는지만 확인하면됨
+
+---------------------새로운 로직
+n = 30만
+t = 36만
+로그내 모든 시간 초단위로 변환 >>> 2n
+36만초의 dp 리스트에서
+시작시각 += 1
+끝시각 -= 1 
+각 초단위 시각기준 몇명이 보고 있었는지 누적합으로 최종정리
+위 작업 >> 2n
+광고시간 길이 첫시작부터 몇초동안 몇명이 봤는지 계산
+한칸씩 앞으로 밀면서 36만개의 시각 순회, 만약 최대 광고 시청시간이 늘어나면 해당 시작 위치를 저장
+
+모든 작업이 선형시간 내 처리 가능
+'''
+#끝점 관리
+
+def time_to_second(s):
+    time_list = s.split(':')
+    second = int(time_list[0])*60*60 + int(time_list[1])*60 + int(time_list[2])
+    return second
+
+def second_to_time(sec):
+    remain = sec
+    second = remain%60
+    remain = remain//60
+    minute = remain%60
+    hour = remain//60
+    if second < 10:
+        second = "0" + str(second)
+    else:
+        second = str(second)
+    if minute < 10:
+        minute = "0" + str(minute)
+    else:
+        minute = str(minute)
+    if hour < 10:
+        hour = "0" + str(hour)
+    else:
+        hour = str(hour)
+    return hour+":"+minute+":"+second
+
+def solution(play_time, adv_time, logs):
+    
+    if play_time == adv_time:
+        return "00:00:00"
+    if len(logs) == 1:
+        return logs[0].split("-")[0]
+    
+    play_time_second = time_to_second(play_time)
+    adv_time_second = time_to_second(adv_time)
+    how_many_at = [0 for _ in range(play_time_second+1)]
+    
+    new_logs = []
+    # 로그내 모든 시간 초단위로 변환 >>> 2n
+    for log in logs:
+        log_split = log.split('-')
+        start = log_split[0]
+        end = log_split[1]
+        start = time_to_second(start)
+        end = time_to_second(end)
+        new_logs.append([start,end])
+        
+    # 36만초의 dp 리스트에서
+    # 시작시각 += 1
+    # 끝시각 -= 1
+    for new_log in new_logs:
+        how_many_at[new_log[0]] += 1
+        how_many_at[new_log[1]] -= 1
+    # 각 초단위 시각기준 몇명이 보고 있었는지 누적합으로 최종정리 >> 2n
+    for i in range(len(how_many_at)-1):
+        how_many_at[i+1] += how_many_at[i]
+    # 광고시간 길이 첫시작부터 몇초동안 몇명이 봤는지 계산
+    
+    max_time_sum = 0
+    start_time = "00:00:00"
+
+    cur_time_sum = 0
+    
+    slide = 0
+    
+    for i in range(adv_time_second):
+        cur_time_sum += how_many_at[i]
+    if max_time_sum < cur_time_sum:
+        max_time_sum = cur_time_sum
+        start_time = second_to_time(slide)
+    slide += 1
+    
+    while slide <= play_time_second - adv_time_second:
+        cur_time_sum -= how_many_at[slide-1]
+        cur_time_sum += how_many_at[adv_time_second+slide-1]
+        if max_time_sum < cur_time_sum:
+            max_time_sum = cur_time_sum
+            start_time = second_to_time(slide)
+        slide += 1
+
+    # 한칸씩 앞으로 밀면서 36만개의 시각 순회, 만약 최대 광고 시청시간이 늘어나면 해당 시작 위치를 저장
+  
+    return start_time
